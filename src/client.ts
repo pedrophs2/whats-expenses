@@ -1,12 +1,12 @@
-const { Client, LocalAuth } = require("whatsapp-web.js");
-const qrcode = require("qrcode-terminal");
+import { Client, LocalAuth } from "whatsapp-web.js";
+import qrcode from "qrcode-terminal";
 
 const client = new Client({
     authStrategy: new LocalAuth(),
     puppeteer: {
         executablePath:
             process.env.PUPPETEER_EXECUTABLE_PATH ||
-            "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
+            'C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe',
         args: [
             "--no-sandbox",
             "--disable-setuid-sandbox",
@@ -25,4 +25,4 @@ client.on("ready", () => console.log("✅ WhatsApp conectado!"));
 client.on("auth_failure", () => console.error("❌ Falha na autenticação."));
 client.on("disconnected", (reason) => console.warn("⚠️ Desconectado:", reason));
 
-module.exports = client;
+export default client;

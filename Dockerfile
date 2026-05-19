@@ -13,13 +13,15 @@ RUN apt-get update && apt-get install -y \
     libgbm1 \
     libasound2 \
     libnss3 \
-    --no-install-recommends
+    --no-install-recommends && \
+    rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 COPY package*.json ./
 RUN npm install
 COPY . .
+RUN npm run build
 
 ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium
 
-CMD ["node", "index.js"]
+CMD ["npm", "start"]
