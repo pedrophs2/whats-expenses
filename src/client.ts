@@ -19,29 +19,16 @@ const client = new Client({
   },
 });
 
-client.on("qr", async (qr: string) => {
-  console.log(
-    "===================================================================",
-  );
-  QRCode.toBuffer(qr, (err: Error | null | undefined, buffer: Buffer) => {
-    if (err) return console.error("❌ Erro ao gerar QR:", err);
+client.on('qr', async (qr: string) => {
+    try {
+        const buffer = await QRCode.toBuffer(qr);
+        const base64 = `data:image/png;base64,${buffer.toString('base64')}`;
 
-    const base64 = `data:image/png;base64,${buffer.toString("base64")}`;
-    const chunks = base64.match(/.{1,200}/g) || [];
+        console.log(`QR_CODE:${base64}`);
 
-    console.log(`📱 QR Code (${chunks.length} lines):`);
-    chunks.forEach((chunk, i) => {
-      console.log(
-        `QR[${String(i + 1).padStart(4, "0")}/${chunks.length}] ${chunk}`,
-      );
-    });
-    console.log(
-      "📋 Copy all QR[...] lines, strip the prefixes, and decode the base64 image.",
-    );
-  });
-  console.log(
-    "===================================================================",
-  );
+    } catch (err) {
+        console.error('❌ Erro ao gerar QR Code:', err);
+    }
 });
 
 client.on("ready", () => console.log("✅ WhatsApp conectado!"));
