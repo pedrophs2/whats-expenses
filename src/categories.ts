@@ -1,12 +1,23 @@
 const categories: string[] = [
-    '1. Casa', '2. Alimentação', '3. Carro', '4. Transporte',
-    '5. Educação', '6. Entretenimento', '7. Estética', '8. Pagamentos',
-    '9. Saúde', '10. Gastos Fixos', '11. Mercado', '12. Desconhecido',
+  "Casa",
+  "Alimentação",
+  "Mercado",
+  "Gastos Fixos",
+  "Carro",
+  "Transporte",
+  "Educação",
+  "Entretenimento",
+  "Estética",
+  "Roupas",
+  "Eletrônicos",
+  "Pagamentos",
+  "Saúde",
+  "Desconhecido",
 ];
 
-const categoryMenu = categories.join('\n');
+const categoryMenu = categories.map((category, i) => `${i + 1}. ${category}`).join("\n");
 const categoryMap: Record<string, string> = Object.fromEntries(
-    categories.map((cat, i) => [String(i + 1), cat.replace(/^\d+\.\s*/, '')])
+  categories.map((cat, i) => [String(i + 1), cat.replace(/^\d+\.\s*/, "")]),
 );
 
 export { categories, categoryMenu, categoryMap };

@@ -2,7 +2,8 @@ import { google } from "googleapis";
 import { Expense } from "./types/expense";
 
 const SPREADSHEET_ID = "1eHLbm9l2li4PLqaZhO-51VXNAgto2bO1rTM-VCSamHc";
-const SHEET_NAME = "Despesas";
+const EXPENSES_SHEET_NAME = "Despesas";
+const INCOME_SHEET_NAME = "Receitas";
 const SHEET_API_VERSION = 'v4';
 
 export class Sheets {
@@ -10,7 +11,7 @@ export class Sheets {
     return google.sheets({ version: SHEET_API_VERSION, auth: this.getCredentials() });
   }
 
-  async appendExpense(expense: Expense) {
+  async appendExpense(expense: Expense, sheetName: string = EXPENSES_SHEET_NAME) {
     const sheets = await this.getSheet();
     const {
       amount,
@@ -24,7 +25,7 @@ export class Sheets {
 
     await sheets.spreadsheets.values.append({
       spreadsheetId: SPREADSHEET_ID,
-      range: `${SHEET_NAME}!A:G`,
+      range: `${sheetName}!A:G`,
       valueInputOption: "USER_ENTERED",
       requestBody: {
         values: [
@@ -46,7 +47,6 @@ export class Sheets {
 
   private getCredentials() {
     const credentials = JSON.parse(process.env.GOOGLE_CREDENTIALS||"{}")
-    console.log(credentials)
 
     const googleAuth = new google.auth.GoogleAuth({
       credentials,

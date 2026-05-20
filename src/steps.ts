@@ -16,6 +16,9 @@ const PAYMENT_PROCESSORS: Record<string, string> = {
   "4": "Alelo",
 };
 
+const CREDIT_SANTANDER_SHEET_NAME = "Crédito (Santander)";
+const CREDIT_NUBANK_SHEET_NAME = "Crédito (Nubank)";
+
 const processorMenu = Object.entries(PAYMENT_PROCESSORS)
   .map(([key, value]) => `${key}. ${value}`)
   .join("\n");
@@ -118,7 +121,7 @@ export class Steps {
     };
 
     try {
-      await this.sheets.appendExpense(expense);
+      await this.appendExpenseToSheet(expense);
       await msg.reply(
         `✅ Despesa registrada !\n\n` +
           `💰 Valor: R$ ${expense.amount.toFixed(2)}\n` +
@@ -136,5 +139,19 @@ export class Steps {
     }
 
     this.sessions.clearSession(userId);
+  }
+
+  private async appendExpenseToSheet(expense: Expense) {
+    if(expense.paymentMethod === "Crédito") {
+      if(expense.paymentProcessor === "Santander") {
+        await this.sheets.appendExpense(expense, CREDIT_SANTANDER_SHEET_NAME);
+      } else if(expense.paymentProcessor === "Nubank") {
+        await this.sheets.appendExpense(expense, CREDIT_NUBANK_SHEET_NAME);
+      } else {
+        throw new Error(`Processador de crédito não mapeado: ${expense.paymentProcessor}`);
+      }
+    } else {
+      await this.sheets.appendExpense
+    }
   }
 }
